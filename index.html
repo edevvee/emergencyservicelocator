@@ -69,38 +69,41 @@
     <pre id="logText">No searches yet.</pre>
   </div>
  
-  <script>
-    const logText = document.getElementById('logText');
- 
-    function findNearby(serviceType) {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const timestamp = new Date().toLocaleString();
-            const query = encodeURIComponent(serviceType);
-            const url = `https://www.google.com/maps/search/${query}/@${lat},${lon},15z`;
-            window.open(url, '_blank');
- 
-            const logEntry = `[${timestamp}] Searched for: ${serviceType}\nLocation: Latitude ${lat.toFixed(5)}, Longitude ${lon.toFixed(5)}\nURL: ${url}\n\n`;
-            appendToLog(logEntry);
-          },
-          function(error) {
-            alert("Location access failed: " + error.message);
-          }
-        );
-      } else {
-        alert("Geolocation is not supported by this device.");
-      }
+<script>
+  const logText = document.getElementById('logText');
+
+  function findNearby(serviceType) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const timestamp = new Date().toLocaleString();
+          const query = encodeURIComponent(serviceType);
+          const url = `https://www.google.com/maps/search/${query}/@${lat},${lon},15z`;
+
+          // Redirect in the same tab
+          window.location.href = url;
+
+          const logEntry = `[${timestamp}] Searched for: ${serviceType}\nLocation: Latitude ${lat.toFixed(5)}, Longitude ${lon.toFixed(5)}\nURL: ${url}\n\n`;
+          appendToLog(logEntry);
+        },
+        function(error) {
+          alert("Location access failed: " + error.message);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by this device.");
     }
- 
-    function appendToLog(entry) {
-      if (logText.textContent === 'No searches yet.') {
-        logText.textContent = '';
-      }
-      logText.textContent += entry;
+  }
+
+  function appendToLog(entry) {
+    if (logText.textContent === 'No searches yet.') {
+      logText.textContent = '';
     }
-  </script>
+    logText.textContent += entry;
+  }
+</script>
 </body>
 </html>
+
